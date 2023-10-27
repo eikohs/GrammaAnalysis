@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(GrammaAnalysis)
-add_definitions(-std=c99)
+set(CMAKE_CXX_STANDARD 99) # 指定cpp版本
 
 # headers
 include_directories(${PROJECT_SOURCE_DIR}/include)

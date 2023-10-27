@@ -3,5 +3,5 @@ export PROGRAMNAME=gramma
 cd build/
 cmake ..
 make
-./${PROGRAMNAME} -fuck
+./${PROGRAMNAME} -lr
 cd ..
