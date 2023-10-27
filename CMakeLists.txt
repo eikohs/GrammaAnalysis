@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 2.8)
 project(SyntaxAnalysis)
 set(CMAKE_CXX_STANDARD 11) # 指定cpp版本
 
+# 针对WIN32或Linux
+if(WIN32 OR UNIX)
+add_compile_options(-std=c++11)
+endif()
+
 # headers
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
