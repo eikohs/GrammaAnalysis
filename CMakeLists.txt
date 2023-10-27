@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(GrammaAnalysis)
+project(SyntaxAnalysis)
 set(CMAKE_CXX_STANDARD 11) # 指定cpp版本
 
 # headers
