@@ -1,7 +1,7 @@
 # pragma once
 
 /*定义Debug操作*/
-#define DEBUG_SWITCH 0 //0为关，1为开
+#define DEBUG_SWITCH 1 //0为关，1为开
 #define Debug_Out(Opt, Msg)\
     if(DEBUG_SWITCH){\
     std::cout << "\nDebug:[File:" << __FILE__ << "|Line:" << __LINE__ <<"]" << std::endl;\
