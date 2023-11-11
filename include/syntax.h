@@ -1,4 +1,7 @@
 # pragma once
+#include "grammar.h"
+
+using namespace Grammar;
 
 namespace Syntax{
     /*枚举三种语法分析实现方式*/
@@ -13,6 +16,11 @@ namespace Syntax{
     void usageOfProgram(char * argv_0);
 
     // TODO 完成ll文法调用程序的类,为给定文法自动构造预测分析表并使用分析表预测分析程序
+    class SyntaxLL{
+    private:
+        GrammarCla gram; // 文法相关类
+
+    };
 
     // TODO 完成lr文法调用程序的类，构造识别活前缀的DFA与LR分析表并使用分析表预测分析程序
 };

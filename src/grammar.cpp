@@ -35,10 +35,10 @@ namespace Grammar{
         return os;
     }
     std::ostream &operator<<(std::ostream &os, const GrammarCla &gra) {
-        std::cout << "[NonTerminal]:\t" << gra.NonTerminal << std::endl;
-        std::cout << "[Terminal]:\t" << gra.Terminal << std::endl;
+        std::cout << "[NonTerminal]:\n\t" << gra.NonTerminal << std::endl;
+        std::cout << "[Terminal]:\n\t" << gra.Terminal << std::endl;
         std::cout << "[Productions]" << gra.Productions << std::endl;
-        std::cout << "[StartSymbol]:\t" << gra.StartSymbol << std::endl;
+        std::cout << "[StartSymbol]:\n\t" << gra.StartSymbol << std::endl;
         return os;
     }
 
@@ -93,10 +93,12 @@ namespace Grammar{
                             it++;
                             continue;
                         }
+                        else if (*it == EMPTY){
+                            ///<产生式推导出空串，不做处理
+                        }
                         else{
                             ///<一个未被定义的文法符号
-                            std::string outstr = "一个未被定义的文法符号: " + *it;
-                            debug_Out("Error", outstr)
+                            debug_Out("Error", std::string("一个未被定义的文法符号: " + *it))
                             exit(EXIT_FAILURE);
                         }
                     }
@@ -109,16 +111,124 @@ namespace Grammar{
         std::getline(GrammarFile, token);
         vec_token = StringSplit(token, ' ');
         StartSymbol = *vec_token.begin();
+
+        //std::cout << *this;
     }
 
     std::vector<std::string> GrammarCla::StringSplit(std::string &str, const char split) {
         std::vector<std::string> RetVal;
         std::istringstream iss(str); // 输入流
-        std::string token; //接受缓冲区
+        std::string token; // 接受缓冲区
         while(std::getline(iss, token, split)){
             RetVal.push_back(token);
         }
         return RetVal;
+    }
+
+    void GrammarCla::EliminateMultipleProd() {
+        ProductionRight PublicFront; // 记录公共前缀
+        std::vector<std::list<ProductionRight>::iterator> IterSet; // 存储有公共前缀的产生式右侧
+        for(auto Production = Productions.begin();Production != Productions.end();Production++){
+            ///<对于每个非终结符号的产生式，在时间复杂度为O(n^2)的情况下两两比较每个产生式右部，确认是否有公共前缀
+            for(auto iter1 = Production->second.begin();iter1 != Production->second.end();iter1++){
+                for(auto iter2 = iter1; iter2 != Production->second.end();iter2++){
+                    if((*iter1)[0] != (*iter2)[0] || iter1 == iter2){
+                        ///<没有公共的前缀，不做处理，跳过
+                        continue;
+                    }
+                    PublicFront.clear();
+                    IterSet.clear();
+                    ///<生成新的非终结符号
+                    Symbol newSymbol = Production->first + "'";
+                    while(NonTerminal.find(newSymbol) != NonTerminal.end()){
+                        newSymbol.append("'");
+                    }
+                    // 添加新的非终结符号到产生式左侧及非终结符号集中
+                    NonTerminal.insert(newSymbol);
+                    Productions[newSymbol] = {};
+                    debug_Out("Normal", std::string("消除多重产生式，生成新的非终结符号: " + newSymbol))
+                    ///<继续遍历产生式，找到有相同公共前缀的产生式右侧，加入集合一起处理
+                    auto newIter = iter2;
+                    IterSet.push_back(iter1);
+                    IterSet.push_back(iter2);
+                    while(++newIter != Production->second.end()){
+                        if((*newIter)[0] == (*iter1)[0]){
+                            IterSet.push_back(newIter);
+                        }
+                    }
+                    ///<找到最长的公共前缀
+                    bool FlagMaxPub = true;
+                    do{
+                        PublicFront.push_back((**IterSet.begin())[0]);
+                        for(auto & i : IterSet){
+                            i->pop_front();
+                        }
+                        if(!(**IterSet.begin()).empty()){
+                            Symbol tmp = (**IterSet.begin())[0];
+                            for(auto & i : IterSet){
+                                if((*i).empty() || (*i)[0] != tmp){
+                                    FlagMaxPub = false;
+                                    break;
+                                }
+                            }
+                        }
+                        else{
+                            FlagMaxPub = false;
+                        }
+                    }while(FlagMaxPub);
+                    ///<完成修改工作：删除有公共前缀的产生式右侧，替换为一个新的产生式右侧
+                    for(auto & i : IterSet){
+                        Productions[newSymbol].push_back(*i);
+                        Production->second.erase(i);
+                    }
+                    PublicFront.push_back(newSymbol);
+                    Production->second.push_back(PublicFront);
+                    ///<添加了新产生式，从头开始查询
+                    Production = Productions.begin();
+                    iter1 = Production->second.begin();
+                    iter1--;
+                    break;
+                }
+            }
+        }
+        //std::cout << *this;
+    }
+
+    void GrammarCla::EliminateLeftRecursion() {
+        for(auto Production = Productions.begin();Production != Productions.end();Production++){
+            for(auto iter = Production->second.begin(); iter != Production->second.end(); iter++){
+                if((*iter)[0] == Production->first){
+                    ///<开始消除左递归
+                    ///<生成新的非终结符号
+                    Symbol newSymbol = Production->first + "'";
+                    while(NonTerminal.find(newSymbol) != NonTerminal.end()){
+                        newSymbol.append("'");
+                    }
+                    // 添加新的非终结符号到产生式左侧及非终结符号集中
+                    NonTerminal.insert(newSymbol);
+                    Productions[newSymbol] = {};
+                    debug_Out("Normal", std::string("消除左递归，生成新的非终结符号: " + newSymbol))
+                    ///<生成新的产生式并删除原来的含递归产生式
+                    iter->pop_front();
+                    ProductionRight newProdR(*iter);
+                    newProdR.push_back(newSymbol);
+                    Productions[newSymbol].push_back(newProdR);
+                    newProdR.clear();newProdR.push_back(EMPTY);
+                    Productions[newSymbol].push_back(newProdR);
+                    Production->second.erase(iter);
+                    ///<修改原来的产生式
+                    for(auto & tmp : Production->second){
+                        tmp.push_back(newSymbol);
+                    }
+                    ///<修改了产生式，重新开始循环
+                    Production = Productions.begin();
+                    iter = Production->second.begin();
+                    iter--;
+                    continue;
+                }
+            }
+        }
+        //std::cout << *this;
     }
 }
 

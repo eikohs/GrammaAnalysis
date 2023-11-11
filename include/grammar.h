@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <deque>
 #include <vector>
+#include <list>
 #include <fstream>
 
 /*定义Debug操作*/
@@ -13,7 +14,7 @@
     if(DEBUG_SWITCH){\
     std::cout << "\nDebug:[File:" << __FILE__ << "|Line:" << __LINE__ <<"]" << std::endl;\
     std::cout << "Level: " << Opt << std::endl;\
-    std::cout << "Message: "<< Msg << std::endl;}
+    std::cout << "Message: "<< Msg << std::endl << std::endl;}
 
 namespace Grammar{
 
@@ -24,7 +25,7 @@ namespace Grammar{
     /*产生式右端，用双端队列定义，内容是符号，即某一非终结符号的产生式的一个右端*/
     using ProductionRight = std::deque<Symbol>; // deque: 双端队列，与vector的用法无大区别但头插的效率更高
     /*产生式集合，用无序图定义，键值为符号，某一非终结符号能对应一个或多个产生式右端*/
-    using ProductionSet = std::unordered_map<Symbol, std::vector<ProductionRight>>;
+    using ProductionSet = std::unordered_map<Symbol, std::list<ProductionRight>>;
 
     extern std::string EMPTY; //用特殊字符串代指空
     extern std::ifstream GrammarFile; //存储文法的文件流
@@ -57,8 +58,8 @@ namespace Grammar{
         /*获取文法*/
         void LoadGrammar();
         /*消除文法的多重产生式*/
-
-
-        // TODO 完成一个文法产生式的类，负责对文法产生式进行处理(包括消除左递归、多重产生式)
+        void EliminateMultipleProd();
+        /*消除文法的左递归*/
+        void EliminateLeftRecursion();
     };
 };
