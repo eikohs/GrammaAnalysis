@@ -18,9 +18,11 @@ int Syntax::getProgramType(char * argv_1){
 }
 
 void Syntax::usageOfProgram(char * argv_0){
-    std::cout << "Usage: " << argv_0 << " -<option>" << std::endl;
+    std::cout << "Usage: " << argv_0 << " -<option> [GrammarFileName]" << std::endl;
     std::cout << "-<option>:" << std::endl;
         std::cout << "\t-ll: 使用LL(1)语法分析程序" << std::endl;
         std::cout << "\t-lr: 使用LR(1)语法分析程序" << std::endl;
+    std::cout << "[GrammarFileName]" << std::endl;
+        std::cout << "\t存储文法的文件，按照本项目的标准格式写入以正确的读取" << std::endl;
     exit(EXIT_SUCCESS);
 }

@@ -1,11 +1,13 @@
 #include "../include/syntax.h"
 #include "../include/grammar.h"
 #include <iostream>
+#include <fstream>
 
 using namespace Syntax;
+using namespace Grammar;
 
 int main(int argc, char * argv[]){
-    if(argc != 2){
+    if(argc != 3){
         usageOfProgram(argv[0]);
     }
     else{
@@ -13,6 +15,16 @@ int main(int argc, char * argv[]){
         if((programType = getProgramType(argv[1])) == -1){
             usageOfProgram(argv[0]);
         }
+
+        Grammar::GrammarFile.open(argv[2], std::ios::in);///<打开第三个参数对应的文件
+        if(!Grammar::GrammarFile){
+            perror("Open GrammarFile Error");
+            exit(EXIT_FAILURE);
+        }
+        // 测试文法类工作情况
+        Grammar::GrammarCla gram;
+        gram.LoadGrammar();
+
         switch(programType){
             case LLPRO:{
                 // LL(1)语法分析程序
