@@ -53,8 +53,10 @@ namespace Grammar{
         friend std::ostream &operator<<(std::ostream& os, const ProductionSet& prod);
         friend std::ostream &operator<<(std::ostream& os, const GrammarCla& gra);
 
+    private:
         /*实现一个分割字符串的函数*/
         static std::vector<std::string> StringSplit(std::string& str, char split);
+    public:
         /*获取文法*/
         void LoadGrammar();
         /*消除文法的多重产生式*/

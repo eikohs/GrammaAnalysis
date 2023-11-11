@@ -208,14 +208,22 @@ namespace Grammar{
                     NonTerminal.insert(newSymbol);
                     Productions[newSymbol] = {};
                     debug_Out("Normal", std::string("消除左递归，生成新的非终结符号: " + newSymbol))
-                    ///<生成新的产生式并删除原来的含递归产生式
-                    iter->pop_front();
-                    ProductionRight newProdR(*iter);
-                    newProdR.push_back(newSymbol);
-                    Productions[newSymbol].push_back(newProdR);
+                    ///<继续查询接下来的产生式有无左递归,生成新的产生式并删除原来的含递归产生式
+                    ProductionRight newProdR;
+                    while(iter != Production->second.end()){
+                        if((*iter)[0] == Production->first){
+                            iter->pop_front();
+                            newProdR = *iter;
+                            newProdR.push_back(newSymbol);
+                            Productions[newSymbol].push_back(newProdR);
+                            iter = Production->second.erase(iter);
+                        }
+                        else{
+                            iter++;
+                        }
+                    }
                     newProdR.clear();newProdR.push_back(EMPTY);
                     Productions[newSymbol].push_back(newProdR);
-                    Production->second.erase(iter);
                     ///<修改原来的产生式
                     for(auto & tmp : Production->second){
                         tmp.push_back(newSymbol);

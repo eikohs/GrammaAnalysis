@@ -1,4 +1,5 @@
 # pragma once
+
 #include "grammar.h"
 
 using namespace Grammar;
@@ -19,7 +20,19 @@ namespace Syntax{
     class SyntaxLL{
     private:
         GrammarCla gram; // 文法相关类
+        std::unordered_map<Symbol, SymbolSet> First;
+        std::unordered_map<Symbol, SymbolSet> Follow;
+    private:
+        /*构造First集合*/
+        void ConstructFirst();
+        /*构造Follow集合*/
+        void ConstructFollow();
+    public:
+        /*重载<<运算符，方便输出First、Follow集合及LL(1)分析表*/
+        friend std::ostream &operator<<(std::ostream & os, std::unordered_map<Symbol, SymbolSet> & set);
 
+        /*构造LL(1)分析表*/
+        void ConstructLL();
     };
 
     // TODO 完成lr文法调用程序的类，构造识别活前缀的DFA与LR分析表并使用分析表预测分析程序
