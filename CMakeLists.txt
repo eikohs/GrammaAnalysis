@@ -4,9 +4,8 @@ project(SyntaxAnalysis)
 
 set(CMAKE_CXX_STANDARD 11) # 指定cpp版本
 
-# 针对WIN32或Linux
 if(WIN32 OR UNIX)
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++11) # 针对WIN32或Linux, 设置c++版本
 else()
 set(CMAKE_EXE_LINKER_FLAGS "-static") # windows下生成可运行的exe文件
 endif()
