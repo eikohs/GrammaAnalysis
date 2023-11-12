@@ -38,7 +38,7 @@ namespace Grammar{
         std::cout << "[NonTerminal]:\n\t" << gra.NonTerminal << std::endl;
         std::cout << "[Terminal]:\n\t" << gra.Terminal << std::endl;
         std::cout << "[Productions]" << gra.Productions << std::endl;
-        std::cout << "[StartSymbol]:\n\t" << gra.StartSymbol << std::endl;
+        std::cout << "[StartSymbol]:\n\t" << gra.StartSymbol << std::endl << std::endl;
         return os;
     }
 
@@ -194,6 +194,7 @@ namespace Grammar{
         //std::cout << *this;
     }
 
+    /*没有消除间接左递归*/
     void GrammarCla::EliminateLeftRecursion() {
         for(auto Production = Productions.begin();Production != Productions.end();Production++){
             for(auto iter = Production->second.begin(); iter != Production->second.end(); iter++){

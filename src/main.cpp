@@ -24,7 +24,7 @@ int main(int argc, char * argv[]){
                 // LL(1)语法分析程序
                 debug_Out("Normal", "LL语法分析")
                 SyntaxLL synLL;
-                synLL.ConstructLL();
+                synLL.StartLL1Analyse();
             }break;
             case LRPRO:{
                 // LR(1)语法分析程序

@@ -1,11 +1,10 @@
 #NONTERMINAL
-E A B L
+E T A
 #TERMINAL
-num id ( ) ,
++ ( ) [ ] b a
 #PRODUCTIONS
-E -> A | B
-A -> num | id
-B -> ( L )
-L -> L , E | E
+E -> E + T | T
+T -> ( E ) | A [ E ] | A ( E ) | b
+A -> a
 #STARTSYMBOL
 E
