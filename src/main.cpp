@@ -29,6 +29,8 @@ int main(int argc, char * argv[]){
             case LRPRO:{
                 // LR(1)语法分析程序
                 debug_Out("Normal", "LR语法分析")
+                SyntaxLR synLR;
+                synLR.StartLR1Analyze();
             }break;
             default: break;
         }

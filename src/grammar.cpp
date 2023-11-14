@@ -35,10 +35,10 @@ namespace Grammar{
         return os;
     }
     std::ostream &operator<<(std::ostream &os, const GrammarCla &gra) {
-        std::cout << "[NonTerminal]:\n\t" << gra.NonTerminal << std::endl;
-        std::cout << "[Terminal]:\n\t" << gra.Terminal << std::endl;
-        std::cout << "[Productions]" << gra.Productions << std::endl;
-        std::cout << "[StartSymbol]:\n\t" << gra.StartSymbol << std::endl << std::endl;
+        os << "[NonTerminal]:\n\t" << gra.NonTerminal << std::endl;
+        os << "[Terminal]:\n\t" << gra.Terminal << std::endl;
+        os << "[Productions]" << gra.Productions << std::endl;
+        os << "[StartSymbol]:\n\t" << gra.StartSymbol << std::endl << std::endl;
         return os;
     }
 
@@ -237,6 +237,20 @@ namespace Grammar{
                 }
             }
         }
+        //std::cout << *this;
+    }
+
+    void GrammarCla::ExpandGrammar() {
+        ///<生成一个新的起始符
+        Symbol newStart = StartSymbol + "'";
+        while(NonTerminal.find(newStart) != NonTerminal.end()){
+            newStart.append("'");
+        }
+        NonTerminal.insert(newStart);
+        ///<修改产生式，拓广整个文法
+        ProductionRight prodR = {StartSymbol};
+        Productions[newStart] = {prodR};
+        StartSymbol = newStart;
         //std::cout << *this;
     }
 }

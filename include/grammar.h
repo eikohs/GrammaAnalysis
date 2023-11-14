@@ -63,5 +63,7 @@ namespace Grammar{
         void EliminateMultipleProd();
         /*消除文法的左递归*/
         void EliminateLeftRecursion();
+        /*生成拓广文法*/
+        void ExpandGrammar();
     };
 };
