@@ -1,0 +1,9 @@
+#NONTERMINAL
+E L
+#TERMINAL
+a , ( )
+#PRODUCTIONS
+E -> ( L ) | a
+L -> L , E | E
+#STARTSYMBOL
+E

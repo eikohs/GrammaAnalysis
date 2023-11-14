@@ -57,7 +57,6 @@ namespace Syntax{
         void StartLL1Analyse();
     };
 
-    // TODO 完成lr文法调用程序的类，构造识别活前缀的DFA与LR分析表并使用分析表预测分析程序
     /*定义LR1文法用到的符号类型*/
     /*LR1有效项目集的产生式结构，一个非终结符对应的一个产生式右侧*/
     using LR1Production = std::pair<Symbol, ProductionRight>;

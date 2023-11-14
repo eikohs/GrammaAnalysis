@@ -1,0 +1,7 @@
+.\gram 文件夹中存有四个本项目格式的文法，测试文法以此为基准进行
+本文件夹中有一个测试本实验的测试文件 input.txt，可随意修改进行测试
+
+测试LL文法：
+.\syntax.exe -ll .\test\Grammar1.txt < .\input.txt
+测试LR文法：
+.\syntax.exe -lr .\test\Grammar1.txt < .\input.txt

@@ -1,0 +1,10 @@
+#NONTERMINAL
+E T A
+#TERMINAL
++ ( ) [ ] b a
+#PRODUCTIONS
+E -> E + T | T
+T -> ( E ) | A [ E ] | A ( E ) | b
+A -> a
+#STARTSYMBOL
+E

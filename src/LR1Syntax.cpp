@@ -237,8 +237,9 @@ namespace Syntax{
             while(!sta.empty())
                 sta.pop_back();
             sta.emplace_back(0, STACKBOTTOM); // 初始状态入栈
-            SrcStr = token; // 拷贝字符串，用于输出状态
-            token.append(STACKBOTTOM); // 初始状态入栈
+            SrcStr = token; // 拷贝字符串，用于输出结果
+            token.append(STACKBOTTOM); // 栈底符号入栈
+            SucFlag = false;
             while(!sta.empty()){
                 char c = token[0];
                 if(c >= '0' && c <= '9'){
@@ -252,7 +253,9 @@ namespace Syntax{
                 if(Table[seq].find(nowAnaTer) == Table[seq].end()){
                     ///< 分析表未定义的行为，报错
                     debug_Out("Error", "分析字符串过程中出错")
-                    exit(EXIT_FAILURE);
+                    //exit(EXIT_FAILURE);
+                    SucFlag = false;
+                    break;
                 }
                 else{
                     LR1TFunction tmpF = Table[seq][nowAnaTer];
